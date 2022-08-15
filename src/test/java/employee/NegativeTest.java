@@ -1,64 +1,75 @@
 package employee;
 
 import clients.Employee;
+import org.json.simple.parser.ParseException;
 import org.junit.jupiter.api.Test;
 
+
+import java.io.IOException;
+
+import static config.Path.*;
 import static controller.EmployeeController.*;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.equalTo;
+
+
+
 
 
 public class NegativeTest {
 
     @Test
-    public void getRequestEmployee(){
+    public void getRequestEmployee() throws Exception {
         Employee employee = new Employee();
 
-        getEmployeeRequestNegative(employee)
+        String response = getEmployeeRequestNegative(employee)
                 .assertThat()
-                .statusCode(500)
-                .body("message", containsString("Employee with such id = 105 not found"));
+                .statusCode(INTERNAL_SERVER_ERROR)
+                .extract().response().path(responsePath);
+        assertThat(response, containsString(JSOnFileGetMessage(pathTemplate+pathGet+pathNegativeResponse)));
+
+
 
     }
 
     @Test
-    public void postRequestEmployee(){
-        Employee employee = new Employee();
-        employee.setId(104);
-        employee.setName("Max");
-        employee.setPassportNumber("MX456798");
-        employee.setEducation("High");
+    public void postRequestEmployee() throws IOException, ParseException {
+        Employee employee = readJSONFile(pathTemplate+pathPost+pathNegativeRequest);
 
-        putEmployeeRequest(employee).
+
+        String response = postEmployeeRequest(employee).
                 assertThat().
-                statusCode(500)
-                .body("message", containsString("Employee with such id = 104 already exist"));
+                statusCode(INTERNAL_SERVER_ERROR)
+                .extract().response().path(responsePath);
+        assertThat(response, containsString(JSOnFileGetMessage(pathTemplate+pathPost+pathNegativeResponse)));
+
+
 
     }
 
     @Test
-    public void putRequestEmployee(){
-        Employee employee = new Employee();
-        employee.setId(101);
-        employee.setName("Max");
-        employee.setPassportNumber("MX456798");
-        employee.setEducation("High");
+    public void putRequestEmployee() throws IOException, ParseException {
+        Employee employee = readJSONFile(pathTemplate+pathPut+pathNegativeRequest);
 
-        putEmployeeRequest(employee).
+     String response =   putEmployeeRequest(employee).
                 assertThat().
-                statusCode(500)
-                .body("message", equalTo("Employee with such id = 101 doesn't exist"));
+                statusCode(INTERNAL_SERVER_ERROR)
+                .extract().response().path(responsePath);
+        assertThat(response, containsString(JSOnFileGetMessage(pathTemplate+pathPut+pathNegativeResponse)));
+
+
 
     }
 
     @Test
-    public void deleteRequestEmployee(){
+    public void deleteRequestEmployee() throws IOException, ParseException {
         Employee employee = new Employee();
 
-        deleteEmployeeRequest(employee).
+        String response = deleteEmployeeRequest(employee).
                 assertThat().
-                statusCode(500)
-                .body("message", equalTo("Employee with such id = 102 not found"));
+                statusCode(INTERNAL_SERVER_ERROR)
+                .extract().response().path(responsePath);
+        assertThat(response, containsString(JSOnFileGetMessage(pathTemplate+pathDelete+pathNegativeResponse)));
 
     }
 

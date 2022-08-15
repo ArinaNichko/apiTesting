@@ -1,84 +1,89 @@
 package employee;
 
 import clients.Employee;
+import org.json.simple.parser.ParseException;
 import org.junit.jupiter.api.Test;
 
 
+import java.io.IOException;
+
+import static config.Path.*;
 import static controller.EmployeeController.*;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
 
 
+
 public class PositiveTest {
 
+
+
     @Test
-    public void getRequestEmployee(){
+    public void getRequestEmployee() throws IOException, ParseException {
         Employee employee = new Employee();
 
-        getEmployeeRequest(employee)
+
+       Employee employeeResponse = getEmployeeRequest(employee)
                 .assertThat()
-                .statusCode(200)
-                .body("id", equalTo(102),
-                "name", equalTo("Maxim"),
-                        "passportNumber",equalTo("MX456798"),
-                        "education", equalTo("School"));
+                .statusCode(SUCCESS_CODE)
+                .extract().response().as(Employee.class);
+
+        assertThat(employeeResponse, equalTo(readJSONFile(pathTemplate+pathGet+pathPositiveResponse)));
 
     }
 
     @Test
-    public void deleteRequestEmployee(){
+    public void deleteRequestEmployee() throws IOException, ParseException {
         Employee employee = new Employee();
 
-        deleteEmployeeRequest(employee).
+        String employeeResponse =  deleteEmployeeRequest(employee).
                 assertThat().
-                statusCode(200)
-                .body("message", equalTo("Employee with id = 102 has been successfully deleted!"));
+                statusCode(SUCCESS_CODE)
+                .extract().response().path(responsePath);
+
+        assertThat(employeeResponse, equalTo(JSOnFileGetMessage(pathTemplate+pathDelete+pathPositiveResponse)));
+
 
     }
 
     @Test
-    public void putRequestEmployee(){
-        Employee employee = new Employee();
-        employee.setId(104);
-        employee.setName("Max");
-        employee.setPassportNumber("MX456798");
-        employee.setEducation("High");
+    public void putRequestEmployee() throws IOException, ParseException {
+        Employee employee =  readJSONFile(pathTemplate + pathPut + pathPositiveRequest);
 
-        putEmployeeRequest(employee)
+       String response = putEmployeeRequest(employee)
                 .assertThat()
-                .statusCode(200)
-                .body("message", equalTo("Employee with id = 104 has been updated!"));
+                .statusCode(SUCCESS_CODE)
+                .extract().response().path(responsePath);
+        assertThat(response, containsString(JSOnFileGetMessage(pathTemplate+pathPut+pathPositiveResponse)));
+
+
 
     }
 
     @Test
-    public void patchRequestEmployee(){
-        Employee employee = new Employee();
-        employee.setId(104);
-        employee.setName("Ben");
-        employee.setPassportNumber("MX456798");
-        employee.setEducation("School");
+    public void patchRequestEmployee() throws IOException, ParseException {
+        Employee employee = readJSONFile(pathTemplate+pathPatch+pathPositiveRequest);
 
-        putEmployeeRequest(employee)
+       String response  = patchEmployeeRequest(employee)
                 .assertThat()
-                .statusCode(200)
+                .statusCode(SUCCESS_CODE)
                 .header("Content-Type", equalTo("text/plain;charset=UTF-8"))
-                .body("message", equalTo("Employee with id = 104 has been updated!"));
+                .extract().response().path(responsePath);
+        assertThat(response, containsString(JSOnFileGetMessage(pathTemplate+pathPatch+pathPositiveResponse)));
 
     }
 
     @Test
-    public void postRequestEmployee(){
-        Employee employee = new Employee();
-        employee.setId(123);
-        employee.setName("Sarah");
-        employee.setPassportNumber("MX788798");
-        employee.setEducation("School");
+    public void postRequestEmployee() throws IOException, ParseException {
+        Employee employee = readJSONFile(pathTemplate+ pathPost+pathPositiveRequest);
 
-       postEmployeeRequest(employee).
+       String response = postEmployeeRequest(employee).
                 assertThat().
-                statusCode(200)
-               .body("message", equalTo("Employee with id = 123 has been added!"));
+                statusCode(SUCCESS_CODE)
+               .extract().response().path(responsePath);
+        assertThat(response, containsString(JSOnFileGetMessage(pathTemplate+pathPost+pathPositiveResponse)));
+
 
     }
 

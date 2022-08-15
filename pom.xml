@@ -37,8 +37,14 @@
         <artifactId>lombok</artifactId>
         <version>RELEASE</version>
         <scope>compile</scope>
-    </dependency>
 
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/org.apache.clerezza.ext/org.json.simple -->
+    <dependency>
+        <groupId>org.apache.clerezza.ext</groupId>
+        <artifactId>org.json.simple</artifactId>
+        <version>0.4</version>
+    </dependency>
 
 </dependencies>
 </project>

@@ -13,4 +13,7 @@ public class Employee {
     String name;
     String passportNumber;
     String education;
+
+    public Employee(Object readJSONFile) {
+    }
 }

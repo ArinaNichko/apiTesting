@@ -1,17 +1,26 @@
 package controller;
 
 import clients.Employee;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.http.ContentType;
 import io.restassured.response.ValidatableResponse;
 
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
+
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+
+
+import static config.Path.*;
 import static io.restassured.RestAssured.given;
 
+
+
 public class EmployeeController {
-
-    private static final String URL = "http://localhost:9090/";
-
-
 
     public static ValidatableResponse getEmployeeRequest(Employee employee) {
         return given()
@@ -19,7 +28,7 @@ public class EmployeeController {
                 .contentType(ContentType.JSON)
                 .body(employee)
                 .when()
-                .get("employee/102")
+                .get(employeeURL+getEmployee)
                 .then();
 
     }
@@ -30,7 +39,7 @@ public class EmployeeController {
                 .contentType(ContentType.JSON)
                 .body(employee)
                 .when()
-                    .post("employee/")
+                    .post(employeeURL)
                 .then();
 
     }
@@ -41,7 +50,7 @@ public class EmployeeController {
                 .contentType(ContentType.JSON)
                 .body(employee)
                 .when()
-                .put("employee/")
+                .put(employeeURL)
                 .then();
 
     }
@@ -52,7 +61,7 @@ public class EmployeeController {
                 .contentType(ContentType.JSON)
                 .body(employee)
                 .when()
-                .patch("employee/")
+                .patch(employeeURL)
                 .then();
 
     }
@@ -63,7 +72,7 @@ public class EmployeeController {
                 .contentType(ContentType.JSON)
                 .body(employee)
                 .when()
-                .delete("employee/102")
+                .delete(employeeURL+getEmployee)
                 .then();
 
     }
@@ -74,10 +83,28 @@ public class EmployeeController {
                 .contentType(ContentType.JSON)
                 .body(employee)
                 .when()
-                .get("employee/105")
+                .get(employeeURL+deleteNegativeRequest)
                 .then();
 
     }
+
+    public static Employee readJSONFile (String path) throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.readValue(new File(path), Employee.class);
+    }
+
+    public static String JSOnFileGetMessage (String path) throws IOException, ParseException {
+        JSONParser parser = new JSONParser();
+        JSONObject data = (JSONObject) parser.parse(
+                new FileReader(path));
+        return (String) data.get("message");
+
+    }
+
+
+
+
+
 
 
 }
