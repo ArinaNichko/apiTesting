@@ -44,7 +44,6 @@ public class PositiveTest {
 
         assertThat(employeeResponse, equalTo(JSOnFileGetMessage(pathTemplate+pathDelete+pathPositiveResponse)));
 
-
     }
 
     @Test
