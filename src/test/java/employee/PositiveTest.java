@@ -1,22 +1,20 @@
 package employee;
 
-import clients.Employee;
+import employee.configPath.ConfigurationPath;
+import employee.model.Employee;
 import org.json.simple.parser.ParseException;
 import org.junit.jupiter.api.Test;
 
-
 import java.io.IOException;
 
-import static config.Path.*;
-import static controller.EmployeeController.*;
+import static employee.HttpClient.HttpClient.*;
+import static employee.configPath.ConfigurationPath.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
 
 
-
 public class PositiveTest {
-
 
 
     @Test
@@ -24,12 +22,12 @@ public class PositiveTest {
         Employee employee = new Employee();
 
 
-       Employee employeeResponse = getEmployeeRequest(employee)
+        Employee employeeResponse = getEmployeeRequest(employee)
                 .assertThat()
                 .statusCode(SUCCESS_CODE)
                 .extract().response().as(Employee.class);
 
-        assertThat(employeeResponse, equalTo(readJSONFile(pathTemplate+pathGet+pathPositiveResponse)));
+        assertThat(employeeResponse, equalTo(readJSONFile(pathTemplate + pathGet + pathPositiveResponse)));
 
     }
 
@@ -37,51 +35,50 @@ public class PositiveTest {
     public void deleteRequestEmployee() throws IOException, ParseException {
         Employee employee = new Employee();
 
-        String employeeResponse =  deleteEmployeeRequest(employee).
+        String employeeResponse = deleteEmployeeRequest(employee).
                 assertThat().
                 statusCode(SUCCESS_CODE)
                 .extract().response().path(responsePath);
 
-        assertThat(employeeResponse, equalTo(JSOnFileGetMessage(pathTemplate+pathDelete+pathPositiveResponse)));
+        assertThat(employeeResponse, equalTo(JSOnFileGetMessage(pathTemplate + pathDelete + pathPositiveResponse)));
 
     }
 
     @Test
     public void putRequestEmployee() throws IOException, ParseException {
-        Employee employee =  readJSONFile(pathTemplate + pathPut + pathPositiveRequest);
+        Employee employee = readJSONFile(pathTemplate + pathPut + pathPositiveRequest);
 
-       String response = putEmployeeRequest(employee)
+        String response = putEmployeeRequest(employee)
                 .assertThat()
                 .statusCode(SUCCESS_CODE)
                 .extract().response().path(responsePath);
-        assertThat(response, containsString(JSOnFileGetMessage(pathTemplate+pathPut+pathPositiveResponse)));
-
+        assertThat(response, containsString(JSOnFileGetMessage(pathTemplate + pathPut + pathPositiveResponse)));
 
 
     }
 
     @Test
     public void patchRequestEmployee() throws IOException, ParseException {
-        Employee employee = readJSONFile(pathTemplate+pathPatch+pathPositiveRequest);
+        Employee employee = readJSONFile(pathTemplate + pathPatch + pathPositiveRequest);
 
-       String response  = patchEmployeeRequest(employee)
+        String response = patchEmployeeRequest(employee)
                 .assertThat()
                 .statusCode(SUCCESS_CODE)
                 .header("Content-Type", equalTo("text/plain;charset=UTF-8"))
                 .extract().response().path(responsePath);
-        assertThat(response, containsString(JSOnFileGetMessage(pathTemplate+pathPatch+pathPositiveResponse)));
+        assertThat(response, containsString(JSOnFileGetMessage(pathTemplate + pathPatch + pathPositiveResponse)));
 
     }
 
     @Test
     public void postRequestEmployee() throws IOException, ParseException {
-        Employee employee = readJSONFile(pathTemplate+ pathPost+pathPositiveRequest);
+        Employee employee = readJSONFile(pathTemplate + pathPost + pathPositiveRequest);
 
-       String response = postEmployeeRequest(employee).
+        String response = postEmployeeRequest(employee).
                 assertThat().
                 statusCode(SUCCESS_CODE)
-               .extract().response().path(responsePath);
-        assertThat(response, containsString(JSOnFileGetMessage(pathTemplate+pathPost+pathPositiveResponse)));
+                .extract().response().path(responsePath);
+        assertThat(response, containsString(JSOnFileGetMessage(pathTemplate + pathPost + pathPositiveResponse)));
 
 
     }
