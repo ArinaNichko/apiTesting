@@ -1,4 +1,4 @@
-package clients;
+package employee.model;
 
 
 import lombok.AllArgsConstructor;
